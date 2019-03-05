@@ -1,0 +1,312 @@
+<html>
+
+<canvas id = "gameCanvas" width = "375" height = "500"></canvas>
+
+<head>
+
+<style>
+
+body {
+	/* https://www.w3schools.com/colors/colors_gradient.asp */
+
+	background: linear-gradient(to bottom, #0066ff 0%, #66ff66 100%);
+}
+
+canvas {
+	margin-left: 490px;
+	margin-top: 70px;
+}
+
+</style>
+
+</head>
+
+<script>
+
+var canvas;
+var canvasContext;
+var showingLoseScreen = false;
+var PlayerScore = 0;
+
+var ballX = 187.5;
+var ballY = 485;
+var ballSpeedX = 0;
+var ballSpeedY = 0;
+
+const BALL_DIAMETER = 29;
+
+var ball1X = 100;
+var ball1Y = 0;
+var ball1SpeedX = 0;
+var ball1SpeedY = 5;
+
+var ball2X = 150;
+var ball2Y = 0;
+var ball2SpeedX = 0;
+var ball2SpeedY = 5;
+
+var ball3X = 200;
+var ball3Y = 0;
+var ball3SpeedX = 0;
+var ball3SpeedY = 5;
+
+var ball4X = 300;
+var ball4Y = 0;
+var ball4SpeedX = 0;
+var ball4SpeedY = 5;
+
+var ball5X = 350;
+var ball5Y = 0;
+var ball5SpeedX = 0;
+var ball5SpeedY = 5;
+
+function calculateMousePos(evt) {
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft;
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	return {
+		x:mouseX,
+		y:mouseY
+	}
+}
+
+function handleMouseClick(evt) {
+	if(showingLoseScreen) {
+		PlayerScore = 0;
+		showingLoseScreen = false;
+		ball1Resets();
+		ball2Resets();
+		ball3Resets();
+		ball4Resets();
+		ball5Resets();
+	}
+}
+
+function ball1Resets() {
+	ball1SpeedY = Math.floor((Math.random() * 7) + 3);
+	ball1X = Math.floor((Math.random() * 374) + 1);
+	ball1Y = 0;
+}
+
+function ball2Resets() {
+	ball2SpeedY = Math.floor((Math.random() * 7) + 3);
+	ball2X = Math.floor((Math.random() * 374) + 1);
+	ball2Y = 0;
+}
+
+function ball3Resets() {
+	ball3SpeedY = Math.floor((Math.random() * 7) + 3);
+	ball3X = Math.floor((Math.random() * 374) + 1);
+	ball3Y = 0;
+}
+
+function ball4Resets() {
+	ball4SpeedY = Math.floor((Math.random() * 7) + 3);
+	ball4X = Math.floor((Math.random() * 374) + 1);
+	ball4Y = 0;
+}
+
+function ball5Resets() {
+	ball5SpeedY = Math.floor((Math.random() * 7) + 3);
+	ball5X = Math.floor((Math.random() * 374) + 1);
+	ball5Y = 0;
+}
+
+window.onload = function() {
+	canvas = document.getElementById('gameCanvas');
+	canvasContext = canvas.getContext('2d');
+
+	var framesPerSecond = 80;
+	setInterval (function() {
+		moveEverything();
+		drawEverything();
+	}, 1000/framesPerSecond);
+
+	canvas.addEventListener('mousedown' , handleMouseClick);
+
+	canvas.addEventListener('mousemove' ,
+		function(evt) {
+			var mousePos = calculateMousePos(evt);
+			ballX = mousePos.x;
+		});
+}
+
+function moveEverything() {
+	if(showingLoseScreen) {
+		return;
+	}
+
+	ballX += ballSpeedX;
+	ballY += ballSpeedY;
+
+	ball1X += ball1SpeedX;
+	ball1Y += ball1SpeedY;
+
+	ball2X += ball2SpeedX;
+	ball2Y += ball2SpeedY;
+
+	ball3X += ball3SpeedX;
+	ball3Y += ball3SpeedY;
+
+	ball4X += ball4SpeedX;
+	ball4Y += ball4SpeedY;
+
+	ball5X += ball5SpeedX;
+	ball5Y += ball5SpeedY;
+
+	if(ball1Y > canvas.height) {
+		if(ball1X > ballX && ball1X < (ballX + BALL_DIAMETER) || (ball1X + BALL_DIAMETER) > ballX && ball1X < (ballX + BALL_DIAMETER)) {
+			showingLoseScreen = true;
+		}
+		if(ball1X < ballX || ball1X > (ballX + BALL_DIAMETER)) {
+			PlayerScore++;
+			ball1Resets();
+		}
+	}
+
+	if(ball2Y > canvas.height) {
+		if(ball2X > ballX && ball2X < (ballX + BALL_DIAMETER) || (ball2X + BALL_DIAMETER) > ballX && ball2X < (ballX + BALL_DIAMETER)) {
+			showingLoseScreen = true;
+		}
+		if(ball2X < ballX || ball2X > (ballX + BALL_DIAMETER)) {
+			PlayerScore++;
+			ball2Resets();
+		}
+	}
+
+	if(ball3Y > canvas.height) {
+		if(ball3X > ballX && ball3X < (ballX + BALL_DIAMETER) || (ball3X + BALL_DIAMETER) > ballX && ball3X < (ballX + BALL_DIAMETER)) {
+			showingLoseScreen = true;
+		}
+		if(ball3X < ballX || ball3X > (ballX + BALL_DIAMETER)) {
+			PlayerScore++;
+			ball3Resets();
+		}
+	}
+
+	if(ball4Y > canvas.height) {
+		if(ball4X > ballX && ball4X < (ballX + BALL_DIAMETER) || (ball4X + BALL_DIAMETER) > ballX && ball4X < (ballX + BALL_DIAMETER)) {
+			showingLoseScreen = true;
+		}
+		if(ball4X < ballX || ball4X > (ballX + BALL_DIAMETER)) {
+			PlayerScore++;
+			ball4Resets();
+		}
+	}
+
+	if(ball5Y > canvas.height) {
+		if(ball5X > ballX && ball5X < (ballX + BALL_DIAMETER) || (ball5X + BALL_DIAMETER) > ballX && ball5X < (ballX + BALL_DIAMETER)) {
+			showingLoseScreen = true;
+		}
+		if(ball5X < ballX || ball5X > (ballX + BALL_DIAMETER)) {
+			PlayerScore++;
+			ball5Resets();
+		}
+	}
+
+	if(PlayerScore >= 100) {
+		ball1SpeedY = Math.floor((Math.random() * 10) + 3);
+		ball2SpeedY = Math.floor((Math.random() * 10) + 3);
+		ball3SpeedY = Math.floor((Math.random() * 10) + 3);
+		ball4SpeedY = Math.floor((Math.random() * 10) + 3);
+		ball5SpeedY = Math.floor((Math.random() * 10) + 3);
+	}
+
+	if(PlayerScore >= 200) {
+		ball1SpeedY = Math.floor((Math.random() * 15) + 3);
+		ball2SpeedY = Math.floor((Math.random() * 15) + 3);
+		ball3SpeedY = Math.floor((Math.random() * 15) + 3);
+		ball4SpeedY = Math.floor((Math.random() * 15) + 3);
+		ball5SpeedY = Math.floor((Math.random() * 15) + 3);
+	}
+
+	if(PlayerScore >= 300) {
+		ball1SpeedY = Math.floor((Math.random() * 20) + 3);
+		ball2SpeedY = Math.floor((Math.random() * 20) + 3);
+		ball3SpeedY = Math.floor((Math.random() * 20) + 3);
+		ball4SpeedY = Math.floor((Math.random() * 20) + 3);
+		ball5SpeedY = Math.floor((Math.random() * 20) + 3);
+	}
+
+	if(PlayerScore >= 400) {
+		ball1SpeedY = Math.floor((Math.random() * 25) + 3);
+		ball2SpeedY = Math.floor((Math.random() * 25) + 3);
+		ball3SpeedY = Math.floor((Math.random() * 25) + 3);
+		ball4SpeedY = Math.floor((Math.random() * 25) + 3);
+		ball5SpeedY = Math.floor((Math.random() * 25) + 3);
+	}
+}
+
+function drawEverything() {
+	colorRect(0 , 0 , canvas.width , canvas.height , 'black');
+
+	if(showingLoseScreen) {
+		canvasContext.fillStyle = 'white';
+		canvasContext.fillText(PlayerScore , canvas.width/2 , 100);
+		canvasContext.fillText("Player Lost!" , canvas.width/2.3 , 200);
+		canvasContext.fillText("Click To Play Again" , canvas.width/2.65 , 400);
+		return;
+	}
+
+	colorCircle(ballX , ballY , 15 , 'blue');
+
+	colorCircle1(ball1X , ball1Y , 10 , 'red');
+	colorCircle2(ball2X , ball2Y , 10 , 'red');
+	colorCircle3(ball3X , ball3Y , 10 , 'red');
+	colorCircle4(ball4X , ball4Y , 10 , 'red');
+	colorCircle5(ball5X , ball5Y , 10 , 'red');
+
+	canvasContext.fillText(PlayerScore , canvas.width/2 , 100);
+}
+
+function colorCircle(centerX , centerY , radius , drawColor) {
+	canvasContext.fillStyle = 'blue';
+	canvasContext.beginPath();
+	canvasContext.arc(centerX , centerY , radius , Math.PI * 2 , false);
+	canvasContext.fill();
+}
+
+function colorCircle1(centerX , centerY , radius , drawColor) {
+	canvasContext.fillStyle = 'red';
+	canvasContext.beginPath();
+	canvasContext.arc(centerX , centerY , radius , Math.PI * 2 , false);
+	canvasContext.fill();
+}
+
+function colorCircle2(centerX , centerY , radius , drawColor) {
+	canvasContext.fillStyle = 'red';
+	canvasContext.beginPath();
+	canvasContext.arc(centerX , centerY , radius , Math.PI * 2 , false);
+	canvasContext.fill();
+}
+
+function colorCircle3(centerX , centerY , radius , drawColor) {
+	canvasContext.fillStyle = 'red';
+	canvasContext.beginPath();
+	canvasContext.arc(centerX , centerY , radius , Math.PI * 2 , false);
+	canvasContext.fill();
+}
+
+function colorCircle4(centerX , centerY , radius , drawColor) {
+	canvasContext.fillStyle = 'red';
+	canvasContext.beginPath();
+	canvasContext.arc(centerX , centerY , radius , Math.PI * 2 , false);
+	canvasContext.fill();
+}
+
+function colorCircle5(centerX , centerY , radius , drawColor) {
+	canvasContext.fillStyle = 'red';
+	canvasContext.beginPath();
+	canvasContext.arc(centerX , centerY , radius , Math.PI * 2 , false);
+	canvasContext.fill();
+}
+
+function colorRect(leftX , topY , width , height , drawColor) {
+	canvasContext.fillStyle = drawColor;
+	canvasContext.fillRect(leftX , topY , width , height);
+}
+
+</script>
+
+</html>
