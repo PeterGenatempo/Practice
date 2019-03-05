@@ -1,0 +1,212 @@
+<html>
+
+<div id="clockdiv">
+ 
+    <span class="minutes"></span>
+ 	<span>:</span>
+    <span class="seconds"></span>
+  
+</div>
+
+<canvas id = "gameCanvas" width = "375" height = "525"></canvas>
+
+<script>
+
+var canvas;
+var canvasContext;
+var ballX = 0;
+var ballY = 150;
+var ballSpeedX = 10;
+var ballSpeedY = 4;
+
+var showingWinScreen = false;
+var showingLoseScreen = false;
+
+var paddleX = 250;
+const PADDLE_HEIGHT = 10;
+const PADDLE_THICKNESS = 100;
+
+//Clock code modified from:  https://www.sitepoint.com/build-javascript-countdown-timer-no-dependencies/
+
+function getTimeRemaining(endtime) {
+  var t = Date.parse(endtime) - Date.parse(new Date());
+  var seconds = Math.floor((t / 1000) % 60);
+  var minutes = Math.floor((t / 1000 / 60) % 60);
+  return {
+    'total': t,
+    'minutes': minutes,
+    'seconds': seconds
+  };
+}
+
+function initializeClock(id, endtime) {
+  var clock = document.getElementById(id);
+  var minutesSpan = clock.querySelector('.minutes');
+  var secondsSpan = clock.querySelector('.seconds');
+
+  function updateClock() {
+    var t = getTimeRemaining(endtime);
+
+    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+    if (t.total <= 0) {
+      	clearInterval(timeinterval);
+      	showingWinScreen();
+    }
+  }
+
+  updateClock();
+  var timeinterval = setInterval(updateClock, 1000);
+}
+
+var timeInMinutes = 2;
+var currentTime = Date.parse(new Date());
+var deadline = new Date(currentTime + timeInMinutes*60*1000);
+initializeClock('clockdiv', deadline);
+
+function startClock() {
+	initializeClock('clockdiv', deadline);
+}
+
+function calculateMousePos(evt) {
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+	var mouseX = evt.clientX - rect.left - root.scrollLeft - PADDLE_THICKNESS/2;
+	var mouseY = evt.clientY - rect.top - root.scrollTop;
+	return {
+		x:mouseX,
+		y:mouseY
+	}
+}
+
+function handleMouseClick(evt) {
+	if(showingWinScreen) {
+		showingWinScreen = false;
+		startClock();
+	} else if(showingLoseScreen) {
+		showingLoseScreen = false;
+		startClock();
+	}
+}
+
+window.onload = function() {
+	canvas = document.getElementById('gameCanvas');
+	canvasContext = canvas.getContext('2d');
+
+	var framesPerSecond = 60;
+	setInterval (function() {
+		moveEverything();
+		drawEverything();
+	}, 1000/framesPerSecond);
+
+	canvas.addEventListener('mousedown' , handleMouseClick);
+
+	canvas.addEventListener('mousemove' ,
+		function(evt) {
+			var mousePos = calculateMousePos(evt);
+			paddleX = mousePos.x - (PADDLE_HEIGHT/2);
+		});
+}
+
+function ballReset() {
+	if(ballY >= canvas.height) {
+		showingLoseScreen = true;
+	}
+
+	ballSpeedY = Math.floor((Math.random() * 4) + 1);
+	ballSpeedX = Math.floor((Math.random() * 10) + 1);
+	ballX = Math.floor((Math.random() * 374) + 1);
+	ballY = 0;
+}
+
+//Insert this to have AI control paddle
+
+/*function computerMovement() {
+	var paddleXCenter = paddleX + (PADDLE_THICKNESS/2);
+	if(paddleXCenter < ballX - 20 && ballY > 0) {
+		paddleX += 10;
+	}else if(paddleXCenter > ballX + 20 && ballY > 0) {
+		paddleX -= 10;
+	}
+
+	if(paddleX + PADDLE_THICKNESS > canvas.width) {
+		paddleX += 0;
+	}
+}*/
+
+function moveEverything() {
+
+	if(showingLoseScreen) {
+		return;
+	}
+
+	if(showingWinScreen) {
+		return;
+	}
+
+	//computerMovement();
+
+	ballX += ballSpeedX;
+	ballY += ballSpeedY;
+
+	if(ballY > canvas.height) {
+		if(ballX > paddleX && ballX < (paddleX + PADDLE_THICKNESS)) {
+			ballSpeedY = -ballSpeedY;
+
+			var deltaX = ballX - (paddleX + PADDLE_THICKNESS/2);
+			ballSpeedX = deltaX * 0.35;
+		}
+		if(ballX < paddleX || ballX > (paddleX + PADDLE_THICKNESS)) {
+			ballReset();
+		}
+	}
+	if(ballY < 0) {
+		ballSpeedY = -ballSpeedY;
+	}
+	if(ballX > canvas.width) {
+		ballSpeedX = -ballSpeedX;
+	}
+	if(ballX < 0) {
+		ballSpeedX = -ballSpeedX;
+	}
+
+}
+
+function drawEverything() {
+	colorRect(0 , 0 , canvas.width , canvas.height , 'black');
+
+	if(showingLoseScreen) {
+		canvasContext.fillStyle = 'white';
+		canvasContext.fillText("Player Lost!" , canvas.width/2.5 , 200);
+		canvasContext.fillText("Click To Play Again" , canvas.width/2.75 , 400);
+		return;
+	}
+
+	if(showingWinScreen) {
+		canvasContext.fillStyle = 'white';
+		canvasContext.fillText("Player Won!" , canvas.width/2.5 , 200);
+		canvasContext.fillText("Click To Play Again" , canvas.width/2.75 , 400);
+		return;
+	}
+
+	colorRect(paddleX , canvas.height - PADDLE_HEIGHT , PADDLE_THICKNESS , PADDLE_HEIGHT , 'blue');
+
+	colorCircle(ballX , ballY , 10 , 'white');
+}
+
+function colorCircle(centerX , centerY , radius , drawColor) {
+	canvasContext.fillStyle = 'blue';
+	canvasContext.beginPath();
+	canvasContext.arc(centerX , centerY , radius , Math.PI * 2 , false);
+	canvasContext.fill();
+}
+
+function colorRect(leftX , topY , width , height , drawColor) {
+	canvasContext.fillStyle = drawColor;
+	canvasContext.fillRect(leftX , topY , width , height);
+}
+
+</script>
+
+</html>
