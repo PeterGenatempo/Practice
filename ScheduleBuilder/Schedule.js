@@ -1,5 +1,5 @@
 function Schedule() {
-    this.shifts = [];           /*Format "date - time"  "06/13 7:00am-12:00pm"*/
+    this.shifts = [];
     this.employees = [];
 }
 
