@@ -1,12 +1,12 @@
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  background-color: white;
+  background-color: black;
 }
 
 header {
   padding: 20px 0;
-  background-color: white;
+  background-color: black;
 }
 
 header .row{
@@ -18,7 +18,7 @@ header h1 {
   font-weight: 700;
   font-size: 75px;
   margin: 0;
-  color: black;
+  color: white;
   text-shadow: 2px 2px 2px grey;
 }
 
@@ -27,14 +27,14 @@ header nav {
   justify-content: flex-end;
 }
 
-header p {
+header a {
   padding: 0 20px;
   font-size: 20px;
   margin: 0;
-  color: black;
+  color: white;
 }
 
-header p:hover {
+header a:hover {
   color: grey;
   text-decoration: underline;
 }
@@ -43,7 +43,8 @@ header p:hover {
   display: flex;
   align-items: center;
   background-image: url('image.png');
-  border: 1px solid black;
+  border-radius: 50%;
+  border: 10px solid white;
   background-size: cover;
   color: #ffffff;
   height: 700px;
@@ -100,15 +101,34 @@ section .row img {
   margin: 0 0 30px;
 }
 
+a:hover {
+  color: none;
+  text-decoration: none;
+}
+
+.info h2 {
+  font-size: 50px;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+  text-shadow: 2px 2px 2px grey;
+}
+
+.info h3 {
+  font-size: 20px;
+  margin: 0 0 20px;
+  color: white;
+  text-shadow: 2px 2px 2px grey;
+}
+
 footer {
   font-size: 12px;
-  padding: 20px 0;
-  color: black;
+  color: white;
 }
 
 footer .row {
   display: flex;
   align-items: left;
   font-size: 20px;
-  background-color: white;
+  background-color: black;
 }
