@@ -1,4 +1,5 @@
 function Schedule() {
+    this.month;
     this.shifts = [];
     this.employees = [];
 }
@@ -25,7 +26,7 @@ function buildSchedule(newSchedule) {
         sort(newSchedule.employees);
     }
 
-    printSchedule(newSchedule);
+    createSchedule(newSchedule);
 }
 
 function sort(arr) {
@@ -45,30 +46,41 @@ function sort(arr) {
     }
 }
 
-function printSchedule(newSchedule) {
-    document.write("-----Completed Schedule-----");
-    document.write("<br>");
+function downloadSchedule(text, fileType, fileName) {
+  var blob = new Blob([text], { type: fileType });
+
+  var a = document.createElement('a');
+  a.download = fileName;
+  a.href = URL.createObjectURL(blob);
+  a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+}
+
+function createSchedule(newSchedule) {
+    var textSchedule = "";
+    textSchedule += "-----" + newSchedule.month + " Schedule-----\n\n";
 
     for(var i = 0; i < newSchedule.employees.length; i++) {
-        document.write(newSchedule.employees[i].name);
-        document.write("<br>");
+        textSchedule += newSchedule.employees[i].name + "\n";
 
-        document.write("Days requested off:");
-        document.write("<br>");
+        textSchedule += "Days requested off:\n";
         for(var j = 0; j < newSchedule.employees[i].daysOff.length; j++) {
-            document.write(newSchedule.employees[i].daysOff[j]);
-            document.write("<br>");
+            textSchedule += newSchedule.employees[i].daysOff[j] + "\n";
         }
 
-        document.write("Scheduled shifts:");
-        document.write("<br>");
+        textSchedule += "Scheduled shifts:\n";
         for(var k = 0; k < newSchedule.employees[i].workingDays.length; k++) {
-            document.write(newSchedule.employees[i].workingDays[k]);
-            document.write("<br>");
+            textSchedule += newSchedule.employees[i].workingDays[k] + "\n";
         }
 
-        document.write("<br>");
+        textSchedule += "\n";
     }
+
+    downloadSchedule(textSchedule, ".txt", "schedule");
 }
 
 function main() {
@@ -76,6 +88,8 @@ function main() {
 
     if(input == "y") {
         var newSchedule = new Schedule();
+        input = prompt("What month is this schedule for?", "January");
+        newSchedule.month = input;
         input = prompt("Would you like to add a new employee? (y/n)", "y");
 
         while(input == "y") {
