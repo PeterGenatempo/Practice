@@ -1,0 +1,1 @@
+Java app that allows for users to input contents of their fridge and recipes for their favorite meals and the program will output everything they could make based on what they currently have.  Very nice to use if you're not sure what to eat but have lots of food available.
