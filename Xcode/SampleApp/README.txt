@@ -1,0 +1,1 @@
+Personal project to create an IOS app from scratch.  Made a unique game following the popular "clicker" game style.  Project gave experience in Swift development, user interfaces, and graphic creation.
